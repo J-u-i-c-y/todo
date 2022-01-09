@@ -1,35 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 
-class TaskInput extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      input: ''
+function TaskInput(props) {
+  const [inputMessage, setInputMessage] = useState('');
+
+  const addTask = () => {
+    if (inputMessage) {
+      props.addTask(inputMessage);
+      setInputMessage('');
     }
   }
 
-  addTask = () => {
-    const { input } = this.state;
-    if (input) {
-      this.props.addTask(input);
-      this.setState({ input: '' })
-    }
+  const inputChange = (e) => {
+    setInputMessage(e.target.value);
   }
 
-  inputChange = (event) => {
-    this.setState({ input: event.target.value })
-  }
-
-  render() {
-    const { input } = this.state;
-
-    return (
-      <div className="task-input">
-        <input onChange={this.inputChange} value={input}></input>
-        <button onClick={this.addTask}>ADD</button>
-      </div>
-    );
-  }
+  return (
+    <div className="task-input">
+      <input onChange={inputChange} value={inputMessage}></input>
+      <button onClick={addTask}>ADD</button>
+    </div>
+  )
 }
 
 export default TaskInput;
