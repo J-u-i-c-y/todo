@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Task from './components/Task';
 import TaskInput from './components/TaskInput';
-// import store from './store';
 import { observer } from 'mobx-react';
 
 function App() {
@@ -13,7 +12,7 @@ function App() {
 
   let [tasks, setTasks] = useState(initialTasks);
 
-  function tasksKey() {
+  const tasksKey = () => {
     for (let i = 0; i < tasks.length; i++) {
       const currentIds = tasks.map(task => task.id).sort((a, b) => a - b);
       if (currentIds[i] !== i) {
@@ -23,33 +22,33 @@ function App() {
     return tasks.length;
   }
 
-  function sortedTasks() {
+  const sortedTasks = () => {
     return tasks.slice().sort((a, b) => a.done === b.done ? 0 : a.done ? 1 : -1);
   }
-
-  useEffect(() => {
-    console.log(tasks);
-    return () => {
-      console.log('dell');
-    };
-  }, [tasks]);
 
   const activeTasksCount = () => {
     return tasks.filter(task => !task.done).length;
   }
 
   const addTask = (task) => {
-    tasks.push({
+    setTasks([...tasks, {
       id: tasksKey(),
       title: task,
       done: false
-    });
+    }]);
   }
 
   const doneTask = (id) => {
     const index = tasks.map(task => task.id).indexOf(id);
-    tasks[index].done = true;
-    setTasks(tasks);
+    setTasks(
+      [...tasks.map(task => {
+        if (task.id === index) {
+          return { ...task, done: true };
+        }
+        return task;
+      }
+      )]
+    );
   }
 
   const deleteTask = (id) => {
